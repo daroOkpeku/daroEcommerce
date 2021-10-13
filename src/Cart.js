@@ -1,21 +1,31 @@
-import React,{useState} from 'react'
+import React,{useState, useContext} from 'react'
 import { FaTrashAlt, FaRegCaretSquareUp, FaRegCaretSquareDown } from 'react-icons/fa';
+import { context } from './component/Context';
 export default function Cart() {
   const [check, SetCheck] = useState(localStorage.getItem('cart')?JSON.parse(localStorage.getItem('cart')):[]);
   const [figure, Setfig] = useState();
-   
- 
+
+ const created = useContext(context);
+ let zoom = created.cartData
      const handleIncrease = (e)=>{
        let increase =   e.target.dataset.up
      check.forEach(one=>{
           if(one.id === increase){
-           one.amount += 1;
-           console.log(one)
+        one.amount += 1;
+         
           }
          
      })
-    //  console.log(check)
+  
      localStorage.setItem('cart', JSON.stringify(check))
+
+     }
+
+    const getNumber = (id)=>{
+
+        console.log(id)
+     let ans  = zoom.find(item=>item.id === id)
+     return ans.amount
 
      }
     return (
@@ -59,7 +69,7 @@ export default function Cart() {
                        <article className="w-full flex items-center justify-between px-4 py-4 text-purple-500">
                         <h2>Summary</h2> <h3>3</h3>
                        </article>
-                         {check.map(item=>{
+                         {zoom.map(item=>{
                            return  <section className="w-full  mt-2 flex items-center justify-between" key={item.id}>
                              <div className="">
                                  <img src={item.picture} className="h-16 w-16" alt=""/>
@@ -67,7 +77,8 @@ export default function Cart() {
                              <span className="text-sm flex items-center">{item.drink} x 
                              <span className="place-items-center grid">
                                  <span><FaRegCaretSquareUp className="w-8 h-4" data-up={item.id} onClick={(e)=>handleIncrease(e)}/></span>
-                                   {item.amount}
+                                   {/* {item.amount} */}
+                                   {getNumber(item.id)}
                                  <span><FaRegCaretSquareDown className="w-8 h-4"/></span>
                              </span>
                              
