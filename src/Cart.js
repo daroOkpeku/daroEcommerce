@@ -6,24 +6,67 @@ export default function Cart() {
   const [figure, Setfig] = useState();
 
  const created = useContext(context);
+  let SetCartNum  =    created.SetCartNum
  let zoom = created.cartData
-     const handleIncrease = (e)=>{
-       let increase =   e.target.dataset.up
-     check.forEach(one=>{
-          if(one.id === increase){
-        one.amount += 1;
-         
-          }
-         
-     })
-  
-     localStorage.setItem('cart', JSON.stringify(check))
 
+
+ let SetTotal = created.SetTotal
+
+     const handleIncrease = (e)=>{
+     
+       let increase =   e.target.dataset.up
+     zoom.forEach(one=>{
+          if(one.id === increase){
+              one.amount += 1;
+              SetTotal(one.amount)
+          }
+        
+     })
+     localStorage.setItem('cart', JSON.stringify(zoom))
      }
 
-    const getNumber = (id)=>{
 
-        console.log(id)
+      const handleDecrease =(e)=>{
+        let decrease =   e.target.dataset.up
+        zoom.forEach(one=>{
+             if(one.id === decrease && one.amount > 1){
+                  one.amount -= 1;
+                  SetTotal(one.amount)
+                
+             }else if( one.id === decrease && one.amount < 1){
+                
+            }
+           
+        })
+        localStorage.setItem('cart', JSON.stringify(zoom))
+      }
+
+      const handleDelete =(e, data)=>{
+             console.log(data)
+             let item = e.target.parentElement.parentElement.parentElement
+             let son = item.classList.contains('each')
+             if(data && son){
+              item.classList.add('hidden')
+             let answer =  zoom.filter(item=>item.id !== data)
+             let amount = answer.amount
+             SetCartNum(amount);
+           localStorage.setItem('cart', JSON.stringify(answer))
+              console.log(son)
+             }
+            //  if(id){
+            //   // let item = e.target.parentElement.parentElement.parentElement
+            //   // item.classList.add('hidden')
+            
+            //  }
+          
+          //  let answer =  zoom.filter(item=>item.id !== id)
+          //  localStorage.setItem('cart', JSON.stringify(answer))
+         //  parentElement.parentElement.parentElement
+          
+      }
+ 
+
+    const getNumber = (id)=>{
      let ans  = zoom.find(item=>item.id === id)
      return ans.amount
 
@@ -69,25 +112,25 @@ export default function Cart() {
                        <article className="w-full flex items-center justify-between px-4 py-4 text-purple-500">
                         <h2>Summary</h2> <h3>3</h3>
                        </article>
-                         {zoom.map(item=>{
-                           return  <section className="w-full  mt-2 flex items-center justify-between" key={item.id}>
+                      
+                       {zoom.map(item=>{
+                           return  <section className=" each w-full  mt-2 flex items-center justify-between" key={item.id}>
                              <div className="">
-                                 <img src={item.picture} className="h-16 w-16" alt=""/>
+                                 <img src={item.picture} className="h-16 w-16 rounded" alt=""/>
                              </div>
                              <span className="text-sm flex items-center">{item.drink} x 
                              <span className="place-items-center grid">
-                                 <span><FaRegCaretSquareUp className="w-8 h-4" data-up={item.id} onClick={(e)=>handleIncrease(e)}/></span>
-                                   {/* {item.amount} */}
+                                 <span onClick={(e)=>handleIncrease(e)} ><FaRegCaretSquareUp className="w-8 h-4" data-up={item.id} /></span>
                                    {getNumber(item.id)}
-                                 <span><FaRegCaretSquareDown className="w-8 h-4"/></span>
+                              
+                                 <span onClick={(e)=>handleDecrease(e)} ><FaRegCaretSquareDown data-up={item.id}  className="w-8 h-4"/></span>
                              </span>
                              
                              
                               </span>
-                             <div className=""><FaTrashAlt className="text-purple-500"/></div>
+                             <div  className=""  ><FaTrashAlt onClick={(e)=>handleDelete(e, item.id)} className="text-purple-500"/></div>
                              </section>
                          })}
-                       
 
                          </div>
 
@@ -96,4 +139,5 @@ export default function Cart() {
            </section>
         </div>
     )
-}
+
+  }

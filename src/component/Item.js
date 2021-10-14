@@ -1,9 +1,12 @@
-import React, {useEffect} from 'react'
-import { Link } from 'react-router-dom'
+import React, {useEffect, useContext} from 'react'
+import { Link } from 'react-router-dom';
+import { context } from './Context';
 export default function Item(props) {
   let assign = props.all
    let good = props.good
-
+  let method = useContext(context);
+   let SetCartNum = method.SetCartNum
+ console.log(method)
   const handleClick = (id)=>{
      props.SetSelect(id)
   }
@@ -26,12 +29,16 @@ export default function Item(props) {
            //  item.strDrink   item.strDrinkThumb idDrink
 
            let Cartone = {drink:item.strDrink,  picture:item.strDrinkThumb, id:item.idDrink, amount:1}
-     
+              let ItemNum = 0
        
                 let nibble = localStorage.getItem('cart')?JSON.parse(localStorage.getItem('cart')):[]
                 if(nibble){
                       nibble = [...nibble, Cartone]
-                      console.log(nibble)
+                      nibble.map(item=>{
+                        ItemNum  +=  parseInt(item.amount)
+                        SetCartNum(ItemNum)  
+                      })
+                        console.log(ItemNum)
                       localStorage.setItem('cart', JSON.stringify(nibble))
                 }else if(!nibble){
                     Storage = [...Storage, Cartone];

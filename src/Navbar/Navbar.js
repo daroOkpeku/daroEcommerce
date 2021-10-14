@@ -1,10 +1,14 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useContext} from 'react';
 import { Link } from 'react-router-dom';
 import { AES, enc } from 'crypto-js';
 import { RiShoppingBag2Fill } from "react-icons/ri";
-
+import { context } from '../component/Context';
 export default function Navbar() {
     // const[user, Setuser] = useState([]);
+  let roman = useContext(context)
+  let Total = roman.Total
+   let CartNum = roman.CartNum
+ 
    let login = [
        {
            'name':'stephen okpeku',
@@ -35,13 +39,15 @@ export default function Navbar() {
      if(data === true){
        let bool = JSON.parse(localStorage.getItem('cart'))
        bool.map(item=>{
-          itemTotal += parseInt(item.amount)
-             })
+        itemTotal += parseInt(item.amount)
+           })
        return `${itemTotal}`
-     }else{
+     }
+     
+     else{
       return '0'
      }
-   
+
   }
   
     return (
@@ -73,7 +79,8 @@ export default function Navbar() {
                <Link to="/Cart">
                  <span className="grid place-items-center">
                     <span className="relative "><RiShoppingBag2Fill className="h-8 w-8"/>
-                          <div className="h-4 w-4  text-sm grid place-items-center left-5 absolute -top-1 text-white bg-purple-600 rounded-full ">{CartData()}</div>
+                          <div className="h-4 w-4  text-sm grid place-items-center left-5 absolute -top-1 text-white bg-purple-600 rounded-full ">{CartNum > 0?CartNum:CartData()}</div>
+                       
                         </span>
                  </span>
                  </Link>
